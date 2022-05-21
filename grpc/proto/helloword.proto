@@ -1,0 +1,28 @@
+
+// syntax 标识文件遵循什么样的协议
+syntax="proto3";
+// 生成命令
+//  protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative .\helloword.proto
+// package 标识使用包名，如果文件使用go_package选项将按照go_package选项命名包名，如果未使用则使用package关键字命名包名
+package pb;
+
+// 命名存储的包名
+//option go_package="path;name" path 表示生成go文件的存放地址，会自动生成目录 name 表示go文件所属包名
+option go_package=".;pb";
+
+
+// HelloRequest 是入参，HelloReply
+
+message HelloRequest {
+  string name =1;
+}
+message HelloReply {
+  // optional 在go 中会生成带指针的
+  string  message =1;
+}
+// 经过protoc编译器解析后会生成go的rpc服务
+
+service HelloService {
+rpc SayHello (HelloRequest) returns (HelloReply);
+}
+// service rpc returns 都是关键字

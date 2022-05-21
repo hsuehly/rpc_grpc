@@ -1,0 +1,9 @@
+### Send POST request with json body
+POST http://localhost:8080/jsonrpc
+Content-Type: application/json
+
+{
+  "id": 0,
+  "params": ["hsuehly"],
+  "method": "HelloService.Say"
+}
