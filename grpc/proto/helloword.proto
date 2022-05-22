@@ -1,13 +1,18 @@
 
 // syntax 标识文件遵循什么样的协议
 syntax="proto3";
+// import 导入其他的文件
+//import "base.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 // 生成命令
 //  protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative .\helloword.proto
 // package 标识使用包名，如果文件使用go_package选项将按照go_package选项命名包名，如果未使用则使用package关键字命名包名
 package pb;
 
+
 // 命名存储的包名
-//option go_package="path;name" path 表示生成go文件的存放地址，会自动生成目录 name 表示go文件所属包名
+//option go_package="path;name" path 表示生成go文件的存放地址，会自动生成目录位置相对于当前 name 表示go文件所属包名
 option go_package=".;pb";
 
 
@@ -20,9 +25,34 @@ message HelloReply {
   // optional 在go 中会生成带指针的
   string  message =1;
 }
+// 嵌套的message
+message sayRes {
+  int64 code = 1;
+  // 可以直接在里面写，相当于这个只在这用一次， 也可以写在外边多次使用， 编号不影响
+  message Result {
+   string name = 1;
+   int64  age = 2;
+
+  }
+  repeated  Result data = 2;
+}
+// 枚举类型
+enum Gender {
+  MALL = 0;
+  FEMALE = 1;
+}
+// map 类型
+message Map {
+  map<string,string> mp = 1;
+}
+// 时间戳类型
+message  Time {
+      google.protobuf.Timestamp addTime = 1;
+}
 // 经过protoc编译器解析后会生成go的rpc服务
 
 service HelloService {
-rpc SayHello (HelloRequest) returns (HelloReply);
+  rpc SayHello (HelloRequest) returns (HelloReply);
+  rpc Ping (google.protobuf.Empty) returns (google.protobuf.Empty);
 }
 // service rpc returns 都是关键字
